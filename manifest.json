@@ -4,7 +4,7 @@
     "version": "1.1",
     "manifest_version": 2,
     "browser_action": {
-      "default_popup": "hello.html"
+      "default_popup": "html/menu.html"
     },
    "commands": {
       "_execute_browser_action": {
@@ -12,7 +12,7 @@
           "default": "Ctrl+Shift+F",
           "mac": "MacCtrl+Shift+F"
         },
-        "description": "Opens hello.html"
+        "description": "Opens menu.html"
       }
     },
     "permissions": [
@@ -36,9 +36,9 @@
       }
     ],
     "icons": {
-        "16": "icon_16.png",
-        "48": "icon_48.png",
-        "128": "icon_128.png"
+        "16": "imgs/icon_16.png",
+        "48": "imgs/icon_48.png",
+        "128": "imgs/icon_128.png"
     },
     "background": {
       "scripts": ["js/background.js"]
