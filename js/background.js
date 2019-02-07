@@ -40,25 +40,27 @@ chrome.contextMenus.create({
     }
 });
 
+// 无痕模式打开1次
 chrome.contextMenus.create({
-    title: "打开当前页面" + OpenTimes1 + "次",
+    title: "无痕模式打开当前页面" + OpenTimes1 + "次",
+    contexts: ['page', 'image', 'video', 'frame'], 
     onclick: function(){
 		openIncognitoWindow(OpenTimes1)
 	}
 });
 
-chrome.contextMenus.create({
-    title: "打开当前页面" + OpenTimes2 + "次",
-    onclick: function(){
-    	openIncognitoWindow(OpenTimes2)
-	}
-});
+// 获取用户设置的打开次数。可以在 options 中设置
+var defaultConfig = {iot: 100}; // 默认配置
+chrome.storage.sync.get(defaultConfig, function(result) {
+	var customOpenTimes = result.iot;
+    console.log('Value currently is ' + customOpenTimes);
 
-chrome.contextMenus.create({
-    title: "打开当前页面" + OpenTimes3 + "次",
-    onclick: function(){
-    	openIncognitoWindow(OpenTimes3)
-	}
+    chrome.contextMenus.create({
+	    title: "无痕模式打开当前页面" + customOpenTimes + "次",
+	    onclick: function(){
+	    	openIncognitoWindow(customOpenTimes)
+		}
+	});
 });
 
 /**
