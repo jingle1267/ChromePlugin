@@ -1,7 +1,7 @@
 {
-    "name": "隐身打开",
-    "description" : "Hello world Extension",
-    "version": "1.1",
+    "name": "超级工具箱",
+    "description" : "我的浏览器超级工具集",
+    "version": "1.1.1",
     "manifest_version": 2,
     "browser_action": {
       "default_popup": "html/menu.html"

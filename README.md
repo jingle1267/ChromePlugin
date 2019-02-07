@@ -15,3 +15,5 @@
 1. https://chajian.baidu.com/developer/extensions/contextMenus.html
 2. https://chajian.baidu.com/developer/extensions/api_other.html
 
+参考图书：
+	《Chrome扩展及应用开发》
