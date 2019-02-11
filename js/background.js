@@ -1,8 +1,6 @@
 console.log('background.js run');
 
 var OpenTimes1 = 1;
-var OpenTimes2 = 200;
-var OpenTimes3 = 1000;
 
 // 打开隐身窗口的时间
 var OpenDuration = 3123;
@@ -45,45 +43,59 @@ chrome.contextMenus.create({
     title: "无痕模式打开当前页面" + OpenTimes1 + "次",
     contexts: ['page', 'image', 'video', 'frame'], 
     onclick: function(){
-		openIncognitoWindow(OpenTimes1)
+		openIncognitoWindow(OpenTimes1, false)
 	}
 });
 
 // 获取用户设置的打开次数。可以在 options 中设置
-var defaultConfig = {iot: 100}; // 默认配置
+var defaultConfig = {iot: 1}; // 默认配置
 chrome.storage.sync.get(defaultConfig, function(result) {
 	var customOpenTimes = result.iot;
     console.log('Value currently is ' + customOpenTimes);
 
-    chrome.contextMenus.create({
-	    title: "无痕模式打开当前页面" + customOpenTimes + "次",
-	    onclick: function(){
-	    	openIncognitoWindow(customOpenTimes)
-		}
-	});
+    if (customOpenTimes != 1) {
+        chrome.contextMenus.create({
+            title: "无痕模式打开当前页面" + customOpenTimes + "次",
+            onclick: function(){
+                openIncognitoWindow(customOpenTimes, true)
+            }
+        });
+	}
+
 });
 
 /**
  * 打开隐身状态的窗口
  */
-function openIncognitoWindow(openTimes) {
+function openIncognitoWindow(openTimes, auto) {
 	var url = chrome.windows.getCurrent({"populate":true}, function (window) {
 		console.log("window = ", window);
 
 		for (var i = 0; i < window.tabs.length; i++) {
 			var tab = window.tabs[i];
+
 			if (tab.active) {
+                var url = tab.url;
 				for (var j = 0; j < openTimes; j++) {
 					(function(e) {setTimeout(function() {
 						console.log("e = ", e, "-", new Date());
-						chrome.windows.create({"url": tab.url, "incognito": true, "width": 200, 
-							"height": 100}, function (window) {
-								console.log('windowId : ', window.id, "-", new Date());
-								setTimeout(function() {
-									chrome.windows.remove(window.id);
-									console.log('close window : ', new Date());
-								}, CloseDuration);
-				
+
+						var params;
+						if (auto) {
+                            params = {"url": url, "incognito": true, "width": 400,
+                                "height": 300};
+                        } else {
+                            params = {"url": url, "incognito": true};
+						}
+						chrome.windows.create(params, function (wd) {
+								console.log('wd : ', wd, "-", new Date());
+								if (auto) {
+                                    setTimeout(function() {
+                                        chrome.windows.remove(wd.id);
+                                        console.log('close window : ', new Date());
+                                    }, CloseDuration);
+                                }
+
 							}
 						);
 					}, e * OpenDuration)})(j);

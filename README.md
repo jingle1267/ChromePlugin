@@ -8,6 +8,14 @@
 2. https://github.com/sxei/chrome-plugin-demo.git
 3. https://github.com/Kenshin/simpread
 
+### 常见问题
+
+1. 打开的无痕模式无法自动关闭
+
+原因：chrome.windows.create 的 callback 为 null，问题参考：https://bugs.chromium.org/p/chromium/issues/detail?id=532840&colspec=ID%20Pri%20M%20Stars%20ReleaseBlock%20Cr%20Status%20Owner%20Summary%20OS%20Modified
+
+解决办法：给插件添加无痕模式权限。具体：在插件详情的 Allow in incognito 打开。
+
 ### 图标来自 iconfont：
 
 1. https://www.iconfont.cn/collections/detail?spm=a313x.7781069.1998910419.d9df05512&cid=14648
