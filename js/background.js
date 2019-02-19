@@ -55,24 +55,31 @@ getIOT(function (customOpenTimes) {
     if (OpenTimes != 1) {
         title += ' ' + OpenTimes + ' 次';
     }
+
     chrome.contextMenus.create({
         title: title,
         contexts: ['page', 'image', 'video', 'frame'],
         onclick: function () {
-            var index = 0;
-            var interval = setInterval(function () {
-                getCurrentTab(function (tab) {
-                    trueRefresh(tab);
-                });
-                index++;
-                if (index >= OpenTimes) {
-                    clearInterval(interval);
-                }
-            }, OpenDuration);
+
+            getCurrentTab(function (tab) {
+                console.log('getCurrentTab : ', tab);
+                recycleRefresh(tab, OpenTimes);
+            });
 
         }
     });
 });
+
+function recycleRefresh(tab, OpenTimes) {
+    var index = 0;
+    var interval = setInterval(function () {
+        trueRefresh(tab);
+        index++;
+        if (index >= OpenTimes) {
+            clearInterval(interval);
+        }
+    }, OpenDuration);
+}
 
 /**
  * 清空数据并刷新
@@ -100,8 +107,10 @@ function trueRefresh(tab) {
             });
         }
 
+        console.log('refresh tabId : ', tab.id);
+
         // reload currect active tab
-        chrome.tabs.reload();
+        chrome.tabs.reload(tab.id);
     });
 }
 
