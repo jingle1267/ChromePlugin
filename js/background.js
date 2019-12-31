@@ -24,6 +24,15 @@ chrome.contextMenus.create({
     }
 });
 
+// 谷歌搜索
+chrome.contextMenus.create({
+    title: '谷歌搜索 %s',
+    contexts: ['selection'],
+    onclick: function (params) {
+        chrome.tabs.create({url: 'https://www.google.com/search?q=' + encodeURI(params.selectionText)});
+    }
+});
+
 // 百度翻译
 chrome.contextMenus.create({
     title: '百度翻译 %s',
@@ -52,8 +61,10 @@ getIOT(function (customOpenTimes) {
     OpenTimes = customOpenTimes;
 
     let title = '清 cookies 刷新';
+    let title2 = '不清 cookies 刷新';
     if (OpenTimes != 1) {
         title += ' ' + OpenTimes + ' 次';
+        title2 += ' ' + OpenTimes + ' 次';
     }
 
     chrome.contextMenus.create({
@@ -63,17 +74,35 @@ getIOT(function (customOpenTimes) {
 
             getCurrentTab(function (tab) {
                 console.log('getCurrentTab : ', tab);
-                recycleRefresh(tab, OpenTimes);
+                recycleRefresh(tab, OpenTimes, true);
             });
 
         }
     });
+
+    chrome.contextMenus.create({
+        title: title2,
+        contexts: ['page', 'image', 'video', 'frame'],
+        onclick: function () {
+
+            getCurrentTab(function (tab) {
+                console.log('getCurrentTab : ', tab);
+                recycleRefresh(tab, OpenTimes, false);
+            });
+
+        }
+    });
+
 });
 
-function recycleRefresh(tab, OpenTimes) {
+function recycleRefresh(tab, OpenTimes, clearCookie) {
     var index = 0;
     var interval = setInterval(function () {
-        trueRefresh(tab);
+        if (clearCookie) {
+            trueRefresh(tab);
+        } else {
+            chrome.tabs.reload(tab.id);
+        }
         index++;
         if (index >= OpenTimes) {
             clearInterval(interval);
